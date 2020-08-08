@@ -130,6 +130,7 @@ static void set_mark(char **line)
 
 	mark_row = rand() % ROW;
 	mark_col = rand() % COL;
+	mark_col = (mark_col % 2 ? mark_col-1 : mark_col);
 	if(line[mark_row][mark_col] != ' '){
 		set_mark(line);
 	}else{
@@ -163,8 +164,8 @@ int main(void)
 {
 	char **line, **direc;
 	pthread_t thread1;
-	int col = COL/2;
-	int col_tail = COL/2;
+	int col = ((COL/2)%2 ? (COL/2)-1 : (COL/2));
+	int col_tail = col;
 	int row = ROW/2;
 	int row_tail = ROW/2;
 	int ret, i, des_col, des_row;
@@ -222,11 +223,11 @@ int main(void)
 			break;
 		case 'a':
 			des_row = row;
-			des_col = col - 1;
+			des_col = col - 2;
 			break;
 		case 'd':
 			des_row = row;
-			des_col = col + 1;
+			des_col = col + 2;
 			break;
 		default:
 			des_row = row;
@@ -248,10 +249,10 @@ int main(void)
 				row_tail++;
 				break;
 			case 'a':
-				col_tail--;
+				col_tail -= 2;
 				break;
 			case 'd':
-				col_tail++;
+				col_tail += 2;
 				break;
 			default:
 				break;
@@ -269,7 +270,7 @@ int main(void)
 			mark += length;
 			set_mark(line);
 		}
-		printf("\033[0;43mScore: \033[5m%d\033[0m\n", mark);
+		printf("\033[0;43mScore: \033[5m%d   \033[0;43mLength: \033[5m%d\n", mark, length);
 	}
 	printf("\033[5;43mGame Over!Final score:%d\033[0m\n",mark);
 	printf("Please parse q to quit!\n");
